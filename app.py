@@ -26,8 +26,13 @@ if os.path.exists(FONT_PATH):
     with open(FONT_PATH, "rb") as f:
         font_b64 = base64.b64encode(f.read()).decode("utf-8")
 
+# --- STYLE ---
 st.markdown(f"""
 <style>
+  :root {{
+    --primary-bg: linear-gradient(135deg, #2a0e2f, #6a225f, #a34aa0, #f6b07a, #ffdca8);
+  }}
+
   @keyframes sunsetMove {{
     0% {{background-position:0% 50%;}}
     50% {{background-position:100% 50%;}}
@@ -40,13 +45,12 @@ st.markdown(f"""
   }}
 
   html, body {{
-    margin: 0 !important;
-    padding: 0 !important;
-    height: 100% !important;
-    background: linear-gradient(135deg, #2a0e2f, #6a225f, #a34aa0, #f6b07a, #ffdca8);
+    background: var(--primary-bg);
     background-size: 400% 400%;
     animation: sunsetMove 30s ease infinite;
-    overflow-x: hidden;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
     color: #fff !important;
   }}
 
@@ -58,16 +62,12 @@ st.markdown(f"""
     color: #fff !important;
   }}
 
-  [data-testid="stHeader"],
-  [data-testid="stToolbar"],
-  [data-testid="stDecoration"],
-  footer {{
+  [data-testid="stHeader"], footer, [data-testid="stToolbar"], [data-testid="stDecoration"] {{
     display: none !important;
   }}
 
-  [data-testid="stSidebar"],
-  [data-testid="stSidebarContent"] {{
-    background: rgba(35, 0, 45, 0.7) !important;
+  [data-testid="stSidebar"], [data-testid="stSidebarContent"] {{
+    background: rgba(40, 0, 60, 0.65) !important;
     backdrop-filter: blur(12px);
     border: none !important;
     box-shadow: inset 0 0 10px rgba(0,0,0,0.25);
