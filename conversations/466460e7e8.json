@@ -1,0 +1,15 @@
+{
+  "id": "466460e7e8",
+  "title": "New chat",
+  "created_at": "2025-10-22T04:16:15.766873",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hiiii"
+    },
+    {
+      "role": "assistant",
+      "content": "Hey there! It\u2019s really nice to see you here. Just remember, it\u2019s okay to take things one step at a time. How about we take a moment to breathe together? Inhale deeply for a count of four, hold for four, and then exhale for four. Let me know how that feels!"
+    }
+  ]
+}

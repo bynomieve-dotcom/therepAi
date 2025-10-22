@@ -1,0 +1,15 @@
+{
+  "id": "2c3570dff8",
+  "title": "New chat",
+  "created_at": "2025-10-22T04:01:37.506765",
+  "messages": [
+    {
+      "role": "user",
+      "content": "im so excited right now"
+    },
+    {
+      "role": "assistant",
+      "content": "That\u2019s wonderful to hear! It\u2019s great to feel excited and energized. To help you savor this moment, take a deep breath and hold onto that feeling for a moment. Then, maybe jot down a few things that are making you feel this way\u2014celebrating your excitement can make it even more special!"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "a82b71133e",
+  "title": "hey",
+  "created_at": "2025-10-22T03:59:44.706437",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi"
+    },
+    {
+      "role": "assistant",
+      "content": "Hi there! It\u2019s great to hear from you. Just reaching out can be a big step, so I want you to know that it\u2019s completely okay to feel however you\u2019re feeling right now. \n\nHow about taking a moment to pause and take a few deep breaths? Inhale slowly for a count of four, hold for four, and then exhale for four. Let\u2019s try that together!"
+    }
+  ]
+}

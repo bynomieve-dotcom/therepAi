@@ -154,6 +154,10 @@ def create_new_chat():
     st.session_state.current_chat_id = chat_id
 
 def ensure_current_chat():
+    if "first_load" not in st.session_state:
+        create_new_chat()
+        st.session_state.first_load = True
+
     if "current_chat_id" not in st.session_state:
         idx = load_index()
         if idx:
@@ -258,9 +262,7 @@ if user_text:
         )
 
         prompt = f"""
-You are pai, the warm, emotionally intelligent AI companion in an app called therepAi.
-Speak like a grounded, kind, self-aware friend. Avoid diagnosis; keep it practical and gentle.
-Offer one validating line and one tiny micro-step (CBT/DBT/mindfulness inspired).
+You are pai, You are a licensed therapist specializing in CBT and DBT. Guide the user step-by-step using real CBT and DBT techniques. When a user shares a problem, help them identify thoughts, feelings, and behaviors, and suggest specific skills or exercises. Always validate their feelings, avoid diagnosis, and focus on actionable, evidence-based interventions.
 
 Recent chat:
 {memory_context}
@@ -297,4 +299,3 @@ Reply to the user's latest message with warmth and one gentle next step.
         except Exception as e:
             placeholder.markdown(f'<div class="bubble ai-bub left">Error: {e}</div>', unsafe_allow_html=True)
             save_chat(chat)
-S
