@@ -12,7 +12,15 @@ from openai import OpenAI
 
 # -------------------- Setup --------------------
 load_dotenv()
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+# get the API key safely from environment or st.secrets
+api_key = os.getenv("OPENAI_API_KEY") or st.secrets.get("OPENAI_API_KEY")
+if not api_key:
+    st.error("OpenAI API key not found. Please set it in Render Environment Variables.")
+    st.stop()
+
+client = OpenAI(api_key=api_key)
+
 st.set_page_config(page_title="therepAi", page_icon="🧠", layout="centered")
 
 # --- session state bootstrap ---
@@ -45,14 +53,12 @@ st.markdown(f"""
 
   {"@font-face {font-family:'NomiCustom';src:url(data:font/woff2;base64,"+font_b64+") format('woff2');font-weight:100 900;font-style:normal;font-display:swap;}" if font_b64 else ""}
 
-  /* remove all boxes, cards, and padding */
   [data-testid="stSidebar"],[data-testid="stSidebar"]>div,[aria-label="Main menu"]+div,
   [data-testid="stAppViewContainer"]>.main,.block-container,
   [data-testid="stHeader"],header,footer,[data-testid="stToolbar"],[data-testid="stDecoration"]{{
     border:none!important;box-shadow:none!important;background:transparent!important;
   }}
 
-  /* kill bottom bar completely */
   [data-testid="stBottom"],[data-testid="stBottomBlock"],[data-testid="stChatInput"],[data-testid="stChatInputContainer"]{{
     background:transparent!important;
     border:none!important;
@@ -64,14 +70,12 @@ st.markdown(f"""
     box-shadow:none!important;
   }}
 
-  /* send button minimal */
   [data-testid="stBaseButton-secondaryFormSubmit"]{{
     background:rgba(255,255,255,0.18)!important;
     color:#fff!important;
     border:none!important;
   }}
 
-  /* title */
   .app-title{{
     text-align:center;
     font-weight:900;
@@ -81,7 +85,6 @@ st.markdown(f"""
   }}
   .app-title .therep{{text-transform:lowercase}}
 
-  /* chat layout + bubbles */
   .chat-wrap{{display:flex;flex-direction:column;gap:12px}}
   .bubble{{
     display:inline-block;padding:12px 16px;line-height:1.5;max-width:78%;
@@ -96,7 +99,6 @@ st.markdown(f"""
     -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
   }}
 
-  /* FINAL OVERRIDE: remove black background under chat input */
   section.main div[data-testid="stBottom"],
   section.main div[data-testid="stChatInput"],
   section.main div[data-testid="stBottomBlock"],
@@ -256,7 +258,6 @@ if user_text:
         chat["messages"].append({"role": "assistant", "content": reply})
         save_chat(chat)
     else:
-        # ----- build short context for the reply (last 8 msgs) -----
         memory_context = "\n".join(
             f"{m['role'].capitalize()}: {m['content']}" for m in chat["messages"][-8:]
         )
@@ -270,7 +271,6 @@ Recent chat:
 Reply to the user's latest message with warmth and one gentle next step.
 """.strip()
 
-        # assistant reply with typing effect (left, glass)
         placeholder = st.empty()
         try:
             resp = client.chat.completions.create(
@@ -281,7 +281,6 @@ Reply to the user's latest message with warmth and one gentle next step.
             )
             reply = (resp.choices[0].message.content or "").strip()
 
-            # trim any "Pai:" prefix
             for p in ["Pai:", "PAI:", "pai:", "Pai -", "pai -"]:
                 if reply.startswith(p):
                     reply = reply[len(p):].lstrip()
