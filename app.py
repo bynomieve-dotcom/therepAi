@@ -28,33 +28,57 @@ if os.path.exists(FONT_PATH):
 
 st.markdown(f"""
 <style>
-  @keyframes sunsetMove{{0%{{background-position:0% 50%}}50%{{background-position:100% 50%}}100%{{background-position:0% 50%}}}}
+  @keyframes sunsetMove {{
+    0% {{background-position:0% 50%;}}
+    50% {{background-position:100% 50%;}}
+    100% {{background-position:0% 50%;}}
+  }}
   @keyframes breathe {{
     0% {{transform: scale(1); opacity: 0.8;}}
     50% {{transform: scale(1.5); opacity: 1;}}
     100% {{transform: scale(1); opacity: 0.8;}}
   }}
-  html,body,[data-testid="stAppViewContainer"],[data-testid="stSidebar"],[data-testid="stMainBlockContainer"]{{
-    background:linear-gradient(135deg,#2a0e2f,#6a225f,#a34aa0,#f6b07a,#ffdca8);
-    background-size:400% 400%;
-    animation:sunsetMove 30s ease infinite;
-    color:#f7f7f7;
-    {"font-family:NomiCustom,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;" if font_b64 else "font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;"}
-  }}
-  {"@font-face {font-family:'NomiCustom';src:url(data:font/woff2;base64,"+font_b64+") format('woff2');font-weight:100 900;font-style:normal;font-display:swap;}" if font_b64 else ""}
 
-  [data-testid="stAppViewContainer"] > .main, [data-testid="stMainBlockContainer"], section.main, .block-container {{
-    background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important;
+  html, body {{
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 100% !important;
+    background: linear-gradient(135deg,#2a0e2f,#6a225f,#a34aa0,#f6b07a,#ffdca8);
+    background-size: 400% 400%;
+    animation: sunsetMove 30s ease infinite;
+    overflow-x: hidden;
   }}
+
+  [data-testid="stAppViewContainer"], [data-testid="stSidebar"], [data-testid="stMainBlockContainer"], .block-container, .main {{
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }}
+
+  [data-testid="stHeader"], [data-testid="stToolbar"], [data-testid="stDecoration"], footer {{
+    display: none !important;
+  }}
+
+  [data-testid="stAppViewBlockContainer"] {{
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }}
+
   [data-testid="stSidebar"], [data-testid="stSidebarContent"] {{
-    background: rgba(0,0,0,0.15) !important; backdrop-filter: blur(8px); border: none !important; box-shadow: none !important;
+    background: rgba(30, 0, 35, 0.65) !important;
+    backdrop-filter: blur(8px);
+    border: none !important;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
   }}
-  [data-testid="stBottom"], [data-testid="stChatInputContainer"], [data-testid="stChatInput"] {{
-    background: transparent !important; border: none !important; box-shadow: none !important;
-  }}
+
   textarea {{
-    background: rgba(255,255,255,0.1) !important; color: #fff !important; border: none !important; border-radius: 12px !important; padding: 10px !important;
+    background: rgba(255,255,255,0.1) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 10px !important;
   }}
+
   .app-title{{text-align:center;font-weight:900;font-size:clamp(56px,8vw,110px);margin:0 0 16px 0;letter-spacing:.5px;}}
   .app-title .therep{{font-weight:400;text-transform:lowercase}}
   .chat-wrap{{display:flex;flex-direction:column;gap:12px}}
@@ -64,6 +88,18 @@ st.markdown(f"""
   .breathing-circle {{
     width:120px;height:120px;margin:25px auto;background:rgba(255,255,255,0.25);
     border-radius:50%;animation:breathe 8s ease-in-out infinite;
+  }}
+
+  [data-testid="stChatInputContainer"] textarea {{
+    background: rgba(255,255,255,0.1) !important;
+    color: #fff !important;
+    border-radius: 20px !important;
+  }}
+
+  [data-testid="stBottom"], [data-testid="stChatInputContainer"], [data-testid="stChatInput"] {{
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }}
 </style>
 """, unsafe_allow_html=True)
@@ -160,18 +196,13 @@ You are Pai — a warm, supportive CBT & DBT-based guide.
 You are *not* a therapist — your purpose is to help users apply one appropriate skill for their emotional state, guiding them slowly and calmly.
 
 When responding:
-1. **Start by gently exploring** what’s happening before suggesting a skill. Ask 1–2 clarifying questions (e.g., “Can you tell me what’s been making you feel anxious lately?”).
-2. **Choose one single CBT or DBT skill** that fits their emotion — only after understanding their situation.
-   - Panic → grounding or paced breathing
-   - Anger → opposite action or mindfulness
-   - Sadness → behavioral activation or self-soothing
-   - Overwhelm → STOP skill or wise mind
-   - Guilt/Shame → self-compassion or reframing
-3. **Deliver the skill in small, paced steps.**
-   - If the step involves breathing, mention “Take a deep breath in for 4 seconds...” etc.
-   - If multiple steps, present one → pause for user → next.
-4. **Use Markdown** for formatting (bold, italics, lists).
-5. End with a calm reassurance (“You’re doing really well just by pausing to breathe.”)
+1. Begin by gently asking 1–2 clarifying questions about what’s going on, rather than jumping to a skill immediately.
+2. Then choose **one single skill** that fits their emotion (e.g., grounding for panic, self-compassion for guilt).
+3. Deliver that skill naturally, with pauses and short sentences.
+4. If the response involves breathing, describe it slowly and gently — Pai should walk the user through a short round.
+5. Use Markdown for readability: **bold** steps, *italics* for empathy, bullet points for exercises.
+6. End with one grounding reassurance like “You’re doing really well just by pausing to breathe.”
+
 If asked your name, say: “My name is Pai.”
 
 Recent chat:
@@ -190,14 +221,15 @@ Now respond to the user's latest message as Pai, following these rules exactly.
             )
             reply = (resp.choices[0].message.content or "").strip()
 
-            steps = reply.split("\n\n")
-            for step in steps:
-                if "breathe" in step.lower():
-                    st.markdown('<div class="breathing-circle"></div>', unsafe_allow_html=True)
-                placeholder.markdown(step, unsafe_allow_html=False)
-                if st.button("Continue", key=str(uuid.uuid4())):
-                    continue
-                time.sleep(3)
+            if any(word in reply.lower() for word in ["breathe", "breathing", "inhale", "exhale"]):
+                st.markdown('<div class="breathing-circle"></div>', unsafe_allow_html=True)
+                time.sleep(1)
+
+            typed = ""
+            for sentence in reply.split(". "):
+                typed += sentence + ". "
+                placeholder.markdown(typed, unsafe_allow_html=False)
+                time.sleep(0.6)
 
             chat["messages"].append({"role": "assistant", "content": reply})
         except Exception as e:
