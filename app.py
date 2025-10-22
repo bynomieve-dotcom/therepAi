@@ -21,25 +21,25 @@ if os.path.exists(FONT_PATH):
     with open(FONT_PATH, "rb") as f:
         font_b64 = base64.b64encode(f.read()).decode("utf-8")
 
-# -------------------- STYLE FIX --------------------
+# -------------------- STYLE --------------------
 st.markdown(f"""
 <style>
-/* disable streamlit theme and force gradient */
-[data-testid="stAppViewContainer"] {{
-  background: linear-gradient(135deg,#2a0e2f,#6a225f,#a34aa0,#f6b07a,#ffdca8)!important;
-  background-size: 400% 400%!important;
-  animation: move 30s ease infinite!important;
-  color: #fff!important;
-}}
-@keyframes move {{
+/* animated sunset background */
+@keyframes sunsetMove {{
   0% {{background-position:0% 50%;}}
   50% {{background-position:100% 50%;}}
   100% {{background-position:0% 50%;}}
 }}
+[data-testid="stAppViewContainer"] {{
+  background: linear-gradient(135deg,#2a0e2f,#6a225f,#a34aa0,#f6b07a,#ffdca8)!important;
+  background-size: 400% 400%!important;
+  animation: sunsetMove 30s ease infinite!important;
+  color:#fff!important;
+}}
 [data-testid="stSidebar"], [data-testid="stSidebarContent"] {{
-  background: rgba(40,0,60,0.65)!important;
+  background: rgba(35,0,45,0.8)!important;
   backdrop-filter: blur(10px);
-  color: #fff!important;
+  color:#fff!important;
 }}
 [data-testid="stHeader"], [data-testid="stToolbar"], footer, [data-testid="stDecoration"] {{
   display:none!important;
@@ -144,11 +144,13 @@ Respond as Pai now.
                 max_tokens=400,
             )
             reply = resp.choices[0].message.content.strip()
-            typed=""
-            for part in reply.split(". "):
-                typed += part+". "
+
+            # --- typewriter effect ---
+            typed = ""
+            for char in reply:
+                typed += char
                 placeholder.markdown(f'<div class="bubble ai-bub left">{typed}</div>', unsafe_allow_html=True)
-                time.sleep(0.5)
+                time.sleep(0.02)  # speed of typing (lower = faster)
             chat["messages"].append({"role":"assistant","content":reply})
         except Exception as e:
             placeholder.markdown(f'<div class="bubble ai-bub left">Error: {e}</div>', unsafe_allow_html=True)
