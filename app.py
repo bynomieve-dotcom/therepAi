@@ -1,4 +1,3 @@
-# app.py
 import os
 import time
 import json
@@ -13,17 +12,14 @@ from openai import OpenAI
 # -------------------- Setup --------------------
 load_dotenv()
 
-# get the API key safely from environment or st.secrets
 api_key = os.getenv("OPENAI_API_KEY") or st.secrets.get("OPENAI_API_KEY")
 if not api_key:
     st.error("OpenAI API key not found. Please set it in Render Environment Variables.")
     st.stop()
 
 client = OpenAI(api_key=api_key)
-
 st.set_page_config(page_title="therepAi", page_icon="🧠", layout="centered")
 
-# --- session state bootstrap ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -33,7 +29,7 @@ INDEX_PATH = os.path.join(CONV_DIR, "index.json")
 FONT_PATH = "fonts/Quicksand-VariableFont_wght.woff2"
 os.makedirs(CONV_DIR, exist_ok=True)
 
-# -------------------- Font (embed base64, optional) --------------------
+# -------------------- Font --------------------
 font_b64 = ""
 if os.path.exists(FONT_PATH):
     with open(FONT_PATH, "rb") as f:
@@ -87,7 +83,7 @@ st.markdown(f"""
 
   .chat-wrap{{display:flex;flex-direction:column;gap:12px}}
   .bubble{{
-    display:inline-block;padding:12px 16px;line-height:1.5;max-width:78%;
+    display:inline-block;padding:12px 16px;line-height:1.6;max-width:78%;
     white-space:pre-wrap;word-wrap:break-word;border:none!important;border-radius:18px;
   }}
   .user-bub.right{{
@@ -99,20 +95,10 @@ st.markdown(f"""
     -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
   }}
 
-  section.main div[data-testid="stBottom"],
-  section.main div[data-testid="stChatInput"],
-  section.main div[data-testid="stBottomBlock"],
-  section.main div[data-testid="stChatInputContainer"] {{
-    background-color: transparent !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-  }}
   section.main div[data-testid="stChatInputContainer"] textarea {{
     background: transparent !important;
     color: #fff !important;
   }}
-
   [data-testid="stMainBlockContainer"]>div:first-child{{max-width:900px;margin:0 auto}}
 </style>
 """, unsafe_allow_html=True)
@@ -147,11 +133,10 @@ def save_chat(chat):
 
 def create_new_chat():
     chat_id = uuid.uuid4().hex[:10]
-    title = "New chat"
-    chat = {"id": chat_id, "title": title, "created_at": datetime.utcnow().isoformat(), "messages": []}
+    chat = {"id": chat_id, "title": "New chat", "created_at": datetime.utcnow().isoformat(), "messages": []}
     save_chat(chat)
     idx = load_index()
-    idx.insert(0, {"id": chat_id, "title": title})
+    idx.insert(0, {"id": chat_id, "title": "New chat"})
     save_index(idx)
     st.session_state.current_chat_id = chat_id
 
@@ -159,7 +144,6 @@ def ensure_current_chat():
     if "first_load" not in st.session_state:
         create_new_chat()
         st.session_state.first_load = True
-
     if "current_chat_id" not in st.session_state:
         idx = load_index()
         if idx:
@@ -252,7 +236,7 @@ if user_text:
     if any(w in user_text.lower() for w in crisis_words):
         reply = (
             "It sounds like you might be in danger. Please reach out right now. "
-            "Call or text 988 in the U.S., or your local helpline. You are not alone. 💛"
+            "Call or text **988** in the U.S., or your local helpline. You are not alone. 💛"
         )
         st.markdown(f'<div class="bubble ai-bub left">{reply}</div>', unsafe_allow_html=True)
         chat["messages"].append({"role": "assistant", "content": reply})
@@ -263,12 +247,28 @@ if user_text:
         )
 
         prompt = f"""
-You are pai, You are a licensed therapist specializing in CBT and DBT. Guide the user step-by-step using real CBT and DBT techniques. When a user shares a problem, help them identify thoughts, feelings, and behaviors, and suggest specific skills or exercises. Always validate their feelings, avoid diagnosis, and focus on actionable, evidence-based interventions.
+You are Pai — a licensed CBT & DBT therapist who helps users apply therapy skills between sessions. 
+Always sound warm, empathetic, and human. Avoid generic questions and instead focus on practical guidance.
+
+When a user shares something, follow this process:
+1. **Validate** their emotion and show empathy.
+2. **Reflect** what’s happening emotionally or cognitively.
+3. **Introduce one real CBT or DBT skill** that fits (like grounding, opposite action, wise mind, thought reframing, or distress tolerance).
+4. **Guide them step-by-step** through that skill.
+5. **Encourage gentle reflection** at the end.
+
+Use clean **Markdown formatting**:
+- **Bold** key points  
+- *Italics* for empathy  
+- Bullet points or steps for structure  
+- Keep spacing readable and natural  
+
+If the user asks your name, always say your name is **Pai**.
 
 Recent chat:
 {memory_context}
 
-Reply to the user's latest message with warmth and one gentle next step.
+Now respond naturally, compassionately, and in a structured, therapeutic format.
 """.strip()
 
         placeholder = st.empty()
@@ -276,8 +276,8 @@ Reply to the user's latest message with warmth and one gentle next step.
             resp = client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[{"role": "user", "content": prompt}],
-                temperature=0.5,
-                max_tokens=350,
+                temperature=0.65,
+                max_tokens=700,
             )
             reply = (resp.choices[0].message.content or "").strip()
 
@@ -290,7 +290,7 @@ Reply to the user's latest message with warmth and one gentle next step.
             for w in reply.split():
                 typed += w + " "
                 placeholder.markdown(f'<div class="bubble ai-bub left">{typed}▌</div>', unsafe_allow_html=True)
-                time.sleep(0.06)
+                time.sleep(0.04)
             placeholder.markdown(f'<div class="bubble ai-bub left">{typed}</div>', unsafe_allow_html=True)
 
             chat["messages"].append({"role": "assistant", "content": reply})
