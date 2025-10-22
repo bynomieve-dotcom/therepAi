@@ -24,41 +24,51 @@ if os.path.exists(FONT_PATH):
 # -------------------- STYLE --------------------
 st.markdown(f"""
 <style>
-/* animated sunset background */
-@keyframes sunsetMove {{
-  0% {{background-position:0% 50%;}}
-  50% {{background-position:100% 50%;}}
-  100% {{background-position:0% 50%;}}
+/* beautiful animated sunset gradient */
+@keyframes sunsetWave {{
+  0%   {{ background-position: 0% 50%; }}
+  25%  {{ background-position: 50% 100%; }}
+  50%  {{ background-position: 100% 50%; }}
+  75%  {{ background-position: 50% 0%; }}
+  100% {{ background-position: 0% 50%; }}
 }}
+
 [data-testid="stAppViewContainer"] {{
-  background: linear-gradient(135deg,#2a0e2f,#6a225f,#a34aa0,#f6b07a,#ffdca8)!important;
-  background-size: 400% 400%!important;
-  animation: sunsetMove 30s ease infinite!important;
-  color:#fff!important;
+  background: linear-gradient(-45deg, #2a0e2f, #6a225f, #a34aa0, #f6b07a, #ffdca8);
+  background-size: 600% 600%;
+  animation: sunsetWave 45s ease-in-out infinite;
+  color: #fff !important;
 }}
+
 [data-testid="stSidebar"], [data-testid="stSidebarContent"] {{
-  background: rgba(35,0,45,0.8)!important;
-  backdrop-filter: blur(10px);
+  background: rgba(40,0,60,0.75)!important;
+  backdrop-filter: blur(12px);
   color:#fff!important;
+  border:none!important;
 }}
+
 [data-testid="stHeader"], [data-testid="stToolbar"], footer, [data-testid="stDecoration"] {{
   display:none!important;
 }}
+
 .block-container {{
   background:transparent!important;
   color:#fff!important;
 }}
+
 .app-title {{
   text-align:center;
   font-weight:900;
   font-size:clamp(56px,8vw,110px);
   margin:0 0 16px 0;
   color:#fff;
+  letter-spacing:0.5px;
 }}
 .app-title .therep {{
   font-weight:400;
   text-transform:lowercase;
 }}
+
 .chat-wrap{{display:flex;flex-direction:column;gap:12px;}}
 .bubble{{display:inline-block;padding:12px 16px;line-height:1.5;max-width:78%;
 white-space:pre-wrap;word-wrap:break-word;border:none!important;border-radius:18px;}}
@@ -125,11 +135,11 @@ if user_text:
     else:
         context = "\n".join(f"{m['role']}: {m['content']}" for m in chat["messages"][-8:])
         prompt = f"""
-You are Pai — a gentle CBT & DBT-based guide (not a therapist). 
-Start by asking 1–2 simple clarifying questions about what’s going on.
-After that, introduce **one** appropriate skill and guide the user through it slowly, step by step.
-Keep tone kind and warm, using **bold**, *italics*, and short bullet points when explaining.
-If the message mentions breathing, include short pacing cues like “inhale… exhale…”.
+You are Pai — a gentle CBT & DBT-based guide (not a therapist).
+Start by asking 1–2 clarifying questions about what’s going on.
+Then introduce one appropriate skill and walk the user through it calmly, step by step.
+Use a soft, caring tone with **bold** steps and *italic* empathy.
+End with a short grounding reflection.
 Recent chat:
 {context}
 User: {user_text}
@@ -150,7 +160,7 @@ Respond as Pai now.
             for char in reply:
                 typed += char
                 placeholder.markdown(f'<div class="bubble ai-bub left">{typed}</div>', unsafe_allow_html=True)
-                time.sleep(0.02)  # speed of typing (lower = faster)
+                time.sleep(0.02)
             chat["messages"].append({"role":"assistant","content":reply})
         except Exception as e:
             placeholder.markdown(f'<div class="bubble ai-bub left">Error: {e}</div>', unsafe_allow_html=True)
