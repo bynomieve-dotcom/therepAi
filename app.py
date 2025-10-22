@@ -12,7 +12,7 @@ from openai import OpenAI
 
 # -------------------- Setup --------------------
 load_dotenv()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 st.set_page_config(page_title="therepAi", page_icon="🧠", layout="centered")
 
 # --- session state bootstrap ---
@@ -297,3 +297,4 @@ Reply to the user's latest message with warmth and one gentle next step.
         except Exception as e:
             placeholder.markdown(f'<div class="bubble ai-bub left">Error: {e}</div>', unsafe_allow_html=True)
             save_chat(chat)
+S
