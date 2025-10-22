@@ -43,59 +43,92 @@ st.markdown(f"""
     margin: 0 !important;
     padding: 0 !important;
     height: 100% !important;
-    background: linear-gradient(135deg,#2a0e2f,#6a225f,#a34aa0,#f6b07a,#ffdca8);
+    background: linear-gradient(135deg, #2a0e2f, #6a225f, #a34aa0, #f6b07a, #ffdca8);
     background-size: 400% 400%;
     animation: sunsetMove 30s ease infinite;
     overflow-x: hidden;
+    color: #fff !important;
   }}
 
-  [data-testid="stAppViewContainer"], [data-testid="stSidebar"], [data-testid="stMainBlockContainer"], .block-container, .main {{
+  [data-testid="stAppViewContainer"],
+  [data-testid="stMainBlockContainer"],
+  .block-container,
+  section.main {{
     background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
+    color: #fff !important;
   }}
 
-  [data-testid="stHeader"], [data-testid="stToolbar"], [data-testid="stDecoration"], footer {{
+  [data-testid="stHeader"],
+  [data-testid="stToolbar"],
+  [data-testid="stDecoration"],
+  footer {{
     display: none !important;
   }}
 
-  [data-testid="stAppViewBlockContainer"] {{
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-  }}
-
-  [data-testid="stSidebar"], [data-testid="stSidebarContent"] {{
-    background: rgba(30, 0, 35, 0.65) !important;
-    backdrop-filter: blur(8px);
+  [data-testid="stSidebar"],
+  [data-testid="stSidebarContent"] {{
+    background: rgba(35, 0, 45, 0.7) !important;
+    backdrop-filter: blur(12px);
     border: none !important;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
-  }}
-
-  textarea {{
-    background: rgba(255,255,255,0.1) !important;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.25);
     color: #fff !important;
-    border: none !important;
-    border-radius: 12px !important;
-    padding: 10px !important;
   }}
 
-  .app-title{{text-align:center;font-weight:900;font-size:clamp(56px,8vw,110px);margin:0 0 16px 0;letter-spacing:.5px;}}
-  .app-title .therep{{font-weight:400;text-transform:lowercase}}
-  .chat-wrap{{display:flex;flex-direction:column;gap:12px}}
-  .bubble{{display:inline-block;padding:12px 16px;line-height:1.5;max-width:78%;white-space:pre-wrap;word-wrap:break-word;border:none!important;border-radius:18px;}}
-  .user-bub.right{{align-self:flex-end;background:transparent!important;font-weight:600;color:#fff;text-shadow:0 0 4px rgba(0,0,0,0.25);}}
-  .ai-bub.left{{align-self:flex-start;background:rgba(255,255,255,0.08)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}}
+  .app-title {{
+    text-align: center;
+    font-weight: 900;
+    font-size: clamp(56px, 8vw, 110px);
+    margin: 0 0 16px 0;
+    letter-spacing: .5px;
+    color: #fff;
+  }}
+  .app-title .therep {{
+    font-weight: 400;
+    text-transform: lowercase;
+  }}
+
+  .chat-wrap {{display:flex;flex-direction:column;gap:12px;}}
+  .bubble {{
+    display:inline-block;
+    padding:12px 16px;
+    line-height:1.5;
+    max-width:78%;
+    white-space:pre-wrap;
+    word-wrap:break-word;
+    border:none!important;
+    border-radius:18px;
+  }}
+  .user-bub.right {{
+    align-self:flex-end;
+    background:transparent!important;
+    font-weight:600;
+    color:#fff;
+    text-shadow:0 0 4px rgba(0,0,0,0.25);
+  }}
+  .ai-bub.left {{
+    align-self:flex-start;
+    background:rgba(255,255,255,0.08)!important;
+    -webkit-backdrop-filter:blur(8px);
+    backdrop-filter:blur(8px);
+    color:#fff !important;
+  }}
+
   .breathing-circle {{
-    width:120px;height:120px;margin:25px auto;background:rgba(255,255,255,0.25);
-    border-radius:50%;animation:breathe 8s ease-in-out infinite;
+    width:120px;
+    height:120px;
+    margin:25px auto;
+    background:rgba(255,255,255,0.25);
+    border-radius:50%;
+    animation:breathe 8s ease-in-out infinite;
   }}
 
   [data-testid="stChatInputContainer"] textarea {{
-    background: rgba(255,255,255,0.1) !important;
+    background: rgba(255,255,255,0.15) !important;
     color: #fff !important;
+    border: none !important;
     border-radius: 20px !important;
+    padding: 10px !important;
   }}
-
   [data-testid="stBottom"], [data-testid="stChatInputContainer"], [data-testid="stChatInput"] {{
     background: transparent !important;
     border: none !important;
