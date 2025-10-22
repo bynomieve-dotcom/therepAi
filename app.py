@@ -44,21 +44,12 @@ st.markdown(f"""
     100% {{transform: scale(1); opacity: 0.8;}}
   }}
 
-  html, body {{
-    background: var(--primary-bg);
-    background-size: 400% 400%;
-    animation: sunsetMove 30s ease infinite;
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
-    color: #fff !important;
-  }}
-
-  [data-testid="stAppViewContainer"],
-  [data-testid="stMainBlockContainer"],
-  .block-container,
-  section.main {{
-    background: transparent !important;
+  /* --- Apply gradient everywhere --- */
+  html, body, [data-testid="stAppViewContainer"], [data-testid="stAppViewBlockContainer"], 
+  [data-testid="stMainBlockContainer"], .block-container {{
+    background: var(--primary-bg) !important;
+    background-size: 400% 400% !important;
+    animation: sunsetMove 30s ease infinite !important;
     color: #fff !important;
   }}
 
