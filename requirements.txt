@@ -2,3 +2,4 @@ streamlit
 pyrebase4
 python-dotenv
 openai
+setuptools
