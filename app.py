@@ -63,7 +63,7 @@ st.markdown(f"""
   color: #fff !important;
 }}
 [data-testid="stSidebar"], [data-testid="stSidebarContent"] {{
-  background: rgba(255,255,255,0.08)!important;
+  background: linear-gradient(-45deg, #f6b07a, #ffdca8)!important;
   backdrop-filter: blur(12px);
   color:#fff!important;
   border:none!important;
@@ -127,7 +127,7 @@ def login_page():
     st.markdown('<div class="form-side"><div class="form-card">', unsafe_allow_html=True)
     st.markdown('<h2>Sign in</h2>', unsafe_allow_html=True)
 
-    choice = st.radio("", ["Sign In", "Sign Up"], horizontal=True, label_visibility="collapsed")
+    choice = st.radio("", ["Sign In", "Sign Up", "Continue as Guest"], horizontal=True, label_visibility="collapsed")
     email = st.text_input("Email")
     password = st.text_input("Password", type="password")
 
@@ -136,19 +136,29 @@ def login_page():
             try:
                 auth.create_user_with_email_and_password(email, password)
                 st.success("Account created successfully! You can sign in now.")
-            except Exception as e: st.error(f"Error: {e}")
-    else:
+            except Exception as e:
+                st.error(f"Error: {e}")
+
+    elif choice == "Sign In":
         if st.button("Sign In", key="signin_btn", use_container_width=True):
             try:
                 user = auth.sign_in_with_email_and_password(email, password)
                 st.session_state.user = user
                 st.session_state.logged_in = True
-                st.experimental_rerun()
-            except Exception as e: st.error(f"Error: {e}")
+                st.rerun()
+            except Exception as e:
+                st.error(f"Error: {e}")
+
+    elif choice == "Continue as Guest":
+        if st.button("Enter Guest Mode", key="guest_btn", use_container_width=True):
+            st.session_state.logged_in = True
+            st.session_state.user = {"email": "guest@therepai.app"}
+            st.success("You’re in guest mode! Conversations won’t be saved.")
+            st.rerun()
 
     st.markdown("""
       <div class="form-note">
-        New here? Choose "Sign Up" above.
+        New here? Choose "Sign Up" or explore as Guest.
       </div>
     </div></div></div>
     """, unsafe_allow_html=True)
@@ -183,7 +193,7 @@ with st.sidebar:
     if st.button("Log out", use_container_width=True):
         st.session_state.logged_in = False
         st.session_state.user = None
-        st.experimental_rerun()
+        st.rerun()
 
 # -------------------- Header --------------------
 st.markdown('<div class="app-title"><span class="therep">therep</span>Ai</div>', unsafe_allow_html=True)
