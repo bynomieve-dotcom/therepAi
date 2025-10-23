@@ -6,7 +6,8 @@ from openai import OpenAI
 import pyrebase
 
 # -------------------- Setup --------------------
-load_dotenv()
+load_dotenv()  # loads .env locally; on Render, env vars are injected automatically
+
 api_key = os.getenv("OPENAI_API_KEY") or st.secrets.get("OPENAI_API_KEY")
 if not api_key:
     st.error("OpenAI API key missing.")
@@ -15,10 +16,35 @@ if not api_key:
 client = OpenAI(api_key=api_key)
 st.set_page_config(page_title="therepAi", page_icon="🧠", layout="centered")
 
-# -------------------- Firebase Setup --------------------
-with open("firebase_config.json") as f:
-    firebaseConfig = json.load(f)
+# -------------------- Firebase Setup (env-first, JSON fallback) --------------------
+def load_firebase_config():
+    # Try env vars first (Render + local .env)
+    env_cfg = {
+        "apiKey": os.getenv("FIREBASE_API_KEY"),
+        "authDomain": os.getenv("FIREBASE_AUTH_DOMAIN"),
+        "projectId": os.getenv("FIREBASE_PROJECT_ID"),
+        # Pyrebase works best with the appspot bucket host:
+        "storageBucket": os.getenv("FIREBASE_STORAGE_BUCKET"),
+        "messagingSenderId": os.getenv("FIREBASE_MESSAGING_SENDER_ID"),
+        "appId": os.getenv("FIREBASE_APP_ID"),
+        "databaseURL": os.getenv("FIREBASE_DATABASE_URL", "")
+    }
+    if all(env_cfg.get(k) for k in ["apiKey","authDomain","projectId","storageBucket","messagingSenderId","appId"]):
+        return env_cfg
 
+    # Fallback to local file ONLY if present (for dev)
+    if os.path.exists("firebase_config.json"):
+        with open("firebase_config.json") as f:
+            file_cfg = json.load(f)
+        # normalize bucket for pyrebase if needed
+        if file_cfg.get("storageBucket","").endswith(".firebasestorage.app"):
+            file_cfg["storageBucket"] = file_cfg["projectId"] + ".appspot.com"
+        return file_cfg
+
+    st.error("Firebase config not found. Set env vars or add firebase_config.json.")
+    st.stop()
+
+firebaseConfig = load_firebase_config()
 firebase = pyrebase.initialize_app(firebaseConfig)
 auth = firebase.auth()
 db = firebase.database()
